@@ -1,0 +1,26 @@
+{
+  "name": "chirichidi/proof-of-concept-php8-jit-runtime",
+  "type": "project",
+  "authors": [
+    {
+      "name": "chirichidi",
+      "email": "tolessnoise@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*",
+    "php": ">=8.0.2",
+    "google/cloud": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "8.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "CollectorGooglePlayConsole\\": [
+        "src/CollectorGooglePlayConsole"
+      ]
+    }
+  }
+}
