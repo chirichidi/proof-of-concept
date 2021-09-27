@@ -1,11 +1,11 @@
 PHP8_JIT_RUNTIME_TAG='chirichidi/proof-of-concept-php8-jit-runtime'
-FLUENT_BIT_RUNTIME_TAG='fluent/fluent-bit:1.0'
+FLUENT_BIT_RUNTIME_TAG='chirichidi/td-agent-bit'
 
 
 build: \
 	install-php8-jit \
 	composer-install-in-runtime \
-	install-fluent-bit
+	install-td-agent-bit
 
 install-php8-jit:
 	docker build \
@@ -18,13 +18,15 @@ composer-install-in-runtime:
     		-v ~/.composer:/root/.composer \
      		composer -vvv install -d /opt/project
 
-install-fluent-bit:
-	docker pull ${FLUENT_BIT_RUNTIME_TAB}
+install-td-agent-bit:
+	docker build \
+        	--tag ${FLUENT_BIT_RUNTIME_TAG} \
+        	./env/docker/fluentbit-forwarder
 
 
 td-agent-bit-in-runtime:
 	docker run -ti \
-	-p 127.0.0.1:24224:24224 \
-	-v $(shell pwd)/php/logger/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
-	fluent/fluent-bit:1.0 \
-	/fluent-bit/bin/fluent-bit -c /etc/td-agent-bit/fluent-bit.conf
+	--rm \
+	-p 24224:24224 \
+	-v $(shell pwd)/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
+	${FLUENT_BIT_RUNTIME_TAG}
