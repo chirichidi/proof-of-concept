@@ -6,7 +6,6 @@ RUN apt-get update && \
     ln -fs /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
     dpkg-reconfigure --frontend noninteractive tzdata
 
-
 #1 패키지 설치
 RUN apt-get update -y && apt-get install -y wget gpg && \
     wget -qO - https://packages.fluentbit.io/fluentbit.key | apt-key add - && \

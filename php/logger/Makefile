@@ -29,4 +29,5 @@ td-agent-bit-in-runtime:
 	--rm \
 	-p 24224:24224 \
 	-v $(shell pwd)/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
+	-v $(shell pwd)/log/td-agent-bit:/data/log/td-agent-bit \
 	${FLUENT_BIT_RUNTIME_TAG}
