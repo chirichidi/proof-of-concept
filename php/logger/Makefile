@@ -33,7 +33,8 @@ install-td-agent-d:
 td-agent-bit-in-runtime:
 	docker run -ti \
 	--rm \
-	-p 24224:24224 \
+	--network host \
+	-p 24225:24225 \
 	--name fluentbit \
 	-v $(shell pwd)/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
 	-v $(shell pwd)/log/td-agent-bit:/data/log/td-agent-bit \
@@ -42,7 +43,8 @@ td-agent-bit-in-runtime:
 td-agent-d-in-runtime:
 	docker run -it \
 	--rm \
-	-p 24225:24225 \
+	--network host \
+	-p 24224:24224 \
 	--name fluentd \
 	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
 	-v $(shell pwd)/log/td-agent-bit:/fluentd/tmp/log \
