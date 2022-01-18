@@ -48,5 +48,11 @@ td-agent-d-in-runtime:
 	--name fluentd \
 	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
 	-v $(shell pwd)/log/td-agent-bit:/fluentd/tmp/log \
-	-v $(shell pwd)/log/td-agent-d:/fluentd/log \
 	${FLUENTD_RUNTIME_TAG}
+
+start: \
+	td-agent-d-in-runtime
+# tail -F /data/log/scribe/default_primary/bie-sc2bq-log/bie-sc2bq-log_current
+# dstat
+# watch -n1 --color 'ls -lsth /data/log/scribe/default_primary/bie-sc2bq-log/ --color'
+# /data/app/proof-of-concept/php/logger/bin/test_stress.sh  (x parallel)

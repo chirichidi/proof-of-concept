@@ -15,7 +15,15 @@ class Cli
         {
             $length = rand(1024 * 512, 1024 * 1024); //512k ~ 1MB
             $data = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-            $logger->post("testFluentBitPost", ["hello" => $data]);
+            $data = [
+                'datetime' => date('Y-m-d H:i:s'),
+                'game' => 'test_game',
+                'type' => 'fluentd',
+                'signature' => 'test_key',
+                'data' => $data,
+            ];
+            $data = json_encode($data);
+            $logger->post("bie-sc2bq-log", ["data" => $data]); // /data/log/scribe/default_primary/bie-sc2bq-log
         }
     }
 }

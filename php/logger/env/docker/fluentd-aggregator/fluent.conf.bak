@@ -1,33 +1,75 @@
+<match aa.**>
+@type copy
+	<store>
+	@type forest
+	subtype	file
+	<template>
+		time_slice_format %Y%m%d%H
+		time_slice_wait 10s
+		path /tmp/log/td-agent/backup/${tag}/${tag}.*.log	# 경로는 서버 설정에 따라 변경
+		compress gz
+		format json
+	</template>
+	</store>
+	<store>
+	@type forward
+	send_timeout 60s
+	recover_wait 10s
+	heartbeat_interval 1s
+	heartbeat_type tcp
+	phi_threshold 16
+	hard_timeout 60s
+
+	require_ack_response true # at-least-once
+
+	buffer_type file
+	buffer_chunk_limit 1m
+	buffer_queue_limit 10240	# buffer HDD space :::  1m * 10240 =  10G
+	buffer_path /tmp/log/td-agent/buffer/forward.buffer	# 각자 환경에 따라 변경
+	flush_interval 1s
+
+	num_threads 4
+
+	<server>
+		name log-server-03
+		host xxx.xxx.com
+		port 24224
+		weight 50
+	</server>
+
+	<server>
+		name log-server-04
+		host xxx.yyy.com
+		port 24224
+		weight 50
+	</server>
+
+	<secondary>
+		@type file
+		path /tmp/log/td-agent/forward-failed	# 각자 환경에 따라 변경
+	</secondary>
+	</store>
+</match>
+
 <source>
-  @type  forward
-  @id    input1
-  @label @mainstream
-  port  24224
+	type forward
 </source>
 
-<filter **>
-  @type stdout
-</filter>
+# 각자 환경에 맞는 로그 임시저장 폴더 지정
+<source>
+	@type tail
+	path /tmp/log/td-agent/temp/td-agent-local-fail.log
+	pos_file /tmp/log/td-agent/td-agent-local-fail.pos
+	tag default.tmp.sample.retrylog
+	format json
+</source>
 
-<label @mainstream>
-  <match docker.**>
-    @type file
-    @id   output_docker1
-    path         /fluentd/log/docker.*.log
-    symlink_path /fluentd/log/docker.log
-    append       true
-    time_slice_format %Y%m%d
-    time_slice_wait   1m
-    time_format       %Y%m%dT%H%M%S%z
-  </match>
-  <match **>
-    @type file
-    @id   output1
-    path         /fluentd/log/data.*.log
-    symlink_path /fluentd/log/data.log
-    append       true
-    time_slice_format %Y%m%d
-    time_slice_wait   10m
-    time_format       %Y%m%dT%H%M%S%z
-  </match>
-</label>
+# 소스에서 직접 전송이 아닌 특정 폴더 로그를 전송하려면 아래와 같이
+<source>
+	@type tail
+	path /tmp/log/td-agent/sample/log/*.log
+	pos_file /tmp/log/td-agent/filelog.pos
+	tag default.tmp.sample.filelog
+	format json
+	read_from_head true
+</source>
