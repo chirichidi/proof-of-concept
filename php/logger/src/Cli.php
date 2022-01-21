@@ -27,7 +27,7 @@ class Cli
                 'signature' => $signature,
                 'data' => [
                     'key' => $value
-                ],
+                ]
             ];
 //            $data = json_encode($data);
             $logger->post("bie-sc2bq-log", ["data" => $data]); // /data/log/scribe/default_primary/bie-sc2bq-log

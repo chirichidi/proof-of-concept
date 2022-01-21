@@ -34,7 +34,6 @@ td-agent-bit-in-runtime:
 	docker run -ti \
 	--rm \
 	--network host \
-	-p 24225:24225 \
 	--name fluentbit \
 	-v $(shell pwd)/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
 	-v $(shell pwd)/log/td-agent-bit:/data/log/td-agent-bit \
@@ -43,11 +42,10 @@ td-agent-bit-in-runtime:
 td-agent-d-in-runtime:
 	docker run -it \
 	--rm \
-	--network host \
-	-p 24224:24224 \
+    -p 24231:24231 \
+    -p 24224:24224 \
 	--name fluentd \
 	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
-	-v $(shell pwd)/log/td-agent-bit:/fluentd/tmp/log \
 	${FLUENTD_RUNTIME_TAG}
 
 start: \
@@ -56,3 +54,11 @@ start: \
 # dstat
 # watch -n1 --color 'ls -lsth /data/log/scribe/default_primary/bie-sc2bq-log/ --color'
 # /data/app/proof-of-concept/php/logger/bin/test_stress.sh  (x parallel)
+
+prometheus:
+	docker run -it \
+    	--rm \
+    	-p 9090:9090 \
+    	--name prometheus \
+    	-v $(shell pwd)/env/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
+        prom/prometheus
