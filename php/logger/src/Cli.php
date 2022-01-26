@@ -20,7 +20,7 @@ class Cli
             $game = 'test_game';
             $type = 'fluentd';
             $signature = md5(implode([$datetime, $game, $type, 'test_key']));
-            $data = [
+            $record = [
                 'datetime' => date('Y-m-d H:i:s'),
                 'game' => $game,
                 'type' => $type,
@@ -30,7 +30,7 @@ class Cli
                 ]
             ];
 //            $data = json_encode($data);
-            $logger->post("bie-sc2bq-log", ["data" => $data]); // /data/log/scribe/default_primary/bie-sc2bq-log
+            $logger->post("bie-sc2bq-log.test", ["record" => $record]); // /data/log/scribe/default_primary/bie-sc2bq-log.test
         }
     }
 }
