@@ -1,0 +1,42 @@
+version: "3.2"
+
+networks:
+  log-aggregator:
+
+volumes:
+  fluentd-volume:
+
+services:
+  cadvisor:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - log-aggregator
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx.conf
+      - ./nginx/conf.d/prometeus.conf:/etc/conf.d/prometeus.conf
+  fluentd:
+    image: ./fluentd-aggregator
+    container_name: fluentd
+    ports:
+      - "24224:24224"
+      - "24231:24231"
+    networks:
+      - log-aggregator
+    volumes:
+      - ./fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - fluent-test
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - fluentd

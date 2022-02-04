@@ -9,7 +9,7 @@ class Cli
         $logger = new \Fluent\Logger\FluentLogger("localhost", 24224);
 //        $logger = new \Fluent\Logger\FluentLogger("10.29.0.133", 24224);
 
-        $count = 1000000;
+        $count = 1000;
 
         while ($count-- > 0)
         {
@@ -30,7 +30,7 @@ class Cli
                 ]
             ];
 //            $data = json_encode($data);
-            $logger->post("bie-sc2bq-log.test", ["record" => $record]); // /data/log/scribe/default_primary/bie-sc2bq-log.test
+            $logger->post("bie-sc2bq-log.test", ["record" => $record]); // /fluentd/log/scribe/default_primary/bie-sc2bq-log.test
         }
     }
 }

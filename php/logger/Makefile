@@ -36,7 +36,7 @@ td-agent-bit-in-runtime:
 	--network host \
 	--name fluentbit \
 	-v $(shell pwd)/env/docker/fluentbit-forwarder:/etc/td-agent-bit \
-	-v $(shell pwd)/log/td-agent-bit:/data/log/td-agent-bit \
+	-v $(shell pwd)/log/td-agent-bit:/fluentd/log/td-agent-bit \
 	${FLUENT_BIT_RUNTIME_TAG}
 
 td-agent-d-in-runtime:
@@ -46,7 +46,8 @@ td-agent-d-in-runtime:
     -p 24224:24224 \
 	--name fluentd \
 	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
-	${FLUENTD_RUNTIME_TAG}
+	-v /data/log/fluentd:/fluentd/log \
+	fluent/fluentd:v1.3-debian-1 -c /fluentd/etc/fluent.conf -v
 
 start: \
 	td-agent-d-in-runtime
