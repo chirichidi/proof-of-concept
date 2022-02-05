@@ -46,8 +46,8 @@ td-agent-d-in-runtime:
     -p 24224:24224 \
 	--name fluentd \
 	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
-	-v /data/log/fluentd:/fluentd/log \
-	fluent/fluentd:v1.3-debian-1 -c /fluentd/etc/fluent.conf -v
+	-v /fluentd/log:/fluentd/log \
+	${FLUENTD_RUNTIME_TAG} -c /fluentd/etc/fluent.conf -v
 
 start: \
 	td-agent-d-in-runtime
@@ -55,6 +55,9 @@ start: \
 # dstat
 # watch -n1 --color 'ls -lsth /data/log/scribe/default_primary/bie-sc2bq-log/ --color'
 # /data/app/proof-of-concept/php/logger/bin/test_stress.sh  (x parallel)
+
+start2:
+	docker run --rm --name fluentd -p 24224:24224 -p 24224:24224/udp -v /fluentd/log:/fluentd/log fluent/fluentd:v1.3-debian-1
 
 prometheus:
 	docker run -it \
