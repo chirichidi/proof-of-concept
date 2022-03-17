@@ -1,4 +1,4 @@
-FROM fluent/fluentd:v1.4-2
+FROM fluent/fluentd:v1.14-1
 MAINTAINER chirichidi <chirichidi@com2us.com>
 
 USER root
