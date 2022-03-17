@@ -42,10 +42,10 @@ td-agent-bit-in-runtime:
 td-agent-d-in-runtime:
 	docker run -it \
 	--rm \
-    -p 24231:24231 \
+	-d \
     -p 24224:24224 \
 	--name fluentd \
-	-v $(shell pwd)/env/docker/fluentd-aggregator/fluent.conf:/fluentd/etc/fluent.conf \
+	-v $(shell pwd)/env/fluentd/conf:/fluentd/etc \
 	-v /fluentd/log:/fluentd/log \
 	${FLUENTD_RUNTIME_TAG} -c /fluentd/etc/fluent.conf -v
 
@@ -55,6 +55,9 @@ start: \
 # dstat
 # watch -n1 --color 'ls -lsth /data/log/scribe/default_primary/bie-sc2bq-log/ --color'
 # /data/app/proof-of-concept/php/logger/bin/test_stress.sh  (x parallel)
+
+reload: #https://docs.fluentd.org/deployment/signals#sigusr2
+	docker exec fluentd fluent-ctl reload 1
 
 start2:
 	docker run --rm --name fluentd -p 24224:24224 -p 24224:24224/udp -v /fluentd/log:/fluentd/log fluent/fluentd:v1.3-debian-1
